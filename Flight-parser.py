@@ -47,15 +47,15 @@ G_EARTH = 1 # -9.80665 m/s2
 launch_loc = (41.59189627804254, -93.55588561331234)
 
 #Flight ID - Example LX-158-C
-flight_id = 'L-160-B'
+flight_id = 'L-160-A'
 
 #time1  = datetime.strptime('8-01-2008 00:00:00', date_format)
 #set the date and time format
 date_format = "%m-%d-%Y %H:%M:%S"
 launch_time = datetime.strptime('4-26-2022 15:35:00',date_format)
 
-har_df = pd.read_csv("Data/HAR_FDR.csv")
-bert_df = pd.read_csv("Data/BERT_FDR.csv")
+har_df = pd.read_csv("Data/L-160-A/HAR_FDR.csv")
+bert_df = pd.read_csv("Data/L-160-A/BERT_FDR.csv")
 har_df.columns =['Ident', 'Lat', 'Lon', 'Altitude','Temp','Pressure','Humidity','Close']
 bert_df.columns = ['Temp', 'Pressure', 'Humidity', 'Lat','Lon','Altitude','GPS','AccelX','AccelY','AccelZ','GyroX','GyroY','GyroZ','MagX','MagY','MagZ']
 
@@ -124,6 +124,7 @@ def process_and_plot_gyro(df):
     plt.legend(["x","y","z"])
     plt.ylabel("Degrees")
     plt.xlabel("Time")
+    plt.savefig('Plots/'+ flight_id + '-IMU_gyro.pdf',bbox_inches = "tight",dpi = 300)
     return gxi,gyi,gzi
 
 def process_pitch_roll(df):
@@ -146,6 +147,7 @@ def plot_gyro_vs_acc(gyro,acc):
     plt.legend(["gyroscope","accelerometer"])
     plt.xlabel("Samples")
     plt.ylabel("Rotation(degrees)")
+    plt.savefig('Plots/'+ flight_id + '-IMU-gyro_accel.pdf',bbox_inches = "tight",dpi = 300)
     
 def calculate_mag_correction(df):
     mx = df.values[:,13] 
@@ -232,34 +234,34 @@ print("The maximum altitude obtained is",har_alt.max(),"m, or",(har_alt.max()*3.
 # Graph the data
 
 har_alt.plot(title="{} Altitude Plot (HAR)".format(flight_id),ylabel="Altitude in meters",xlabel="Time at 5 sec intervals",figsize=(20, 10));
-plt.savefig('Plots/har_alt_plot.pdf',bbox_inches = "tight",dpi = 500)
+plt.savefig('Plots/' + flight_id + '-har_alt_plot.pdf',bbox_inches = "tight",dpi = 500)
 
 bert_alt.plot(title="{} Altitude Plot (BERT)".format(flight_id),ylabel="Altitude in meters",xlabel="Time in seconds",figsize=(20, 10));
-plt.savefig('Plots/bert_alt_plot.pdf',bbox_inches = "tight",dpi = 500)
+plt.savefig('Plots/'+ flight_id + '-bert_alt_plot.pdf',bbox_inches = "tight",dpi = 500)
 
 har_temp.plot(title="{} Temperature Plot (HAR)".format(flight_id),ylabel="Temperature in C",figsize=(20, 10));
-plt.savefig('Plots/har_temp_plot.pdf',bbox_inches = "tight",dpi = 500)
+plt.savefig('Plots/'+ flight_id + '-har_temp_plot.pdf',bbox_inches = "tight",dpi = 500)
 
 bert_df.Temp.plot(title="{} Temperature Plot (BERT)".format(flight_id),ylabel="Temp in C",figsize=(20, 10));
-plt.savefig('Plots//bert_temp_plot.pdf',bbox_inches = "tight",dpi = 500)
+plt.savefig('Plots/'+ flight_id + '-bert_temp_plot.pdf',bbox_inches = "tight",dpi = 500)
 
 har_df.Humidity.plot(title="{} Humidity Plot (HAR)".format(flight_id),ylabel="Humidity as %",xlabel="Time at 5 sec intervals",figsize=(20, 10));
-plt.savefig('Plots/har_alt_plot.pdf',bbox_inches = "tight",dpi = 500)
+plt.savefig('Plots/'+ flight_id + '-har_alt_plot.pdf',bbox_inches = "tight",dpi = 500)
 
 bert_df.Humidity.plot(title="{} Humidity Plot (BERT)".format(flight_id),ylabel="Humidity (%)",figsize=(20, 10));
-plt.savefig('Plots/bert_humidity_plot.pdf',bbox_inches = "tight",dpi = 500)
+plt.savefig('Plots/'+ flight_id + '-bert_humidity_plot.pdf',bbox_inches = "tight",dpi = 500)
 
 har_df.Pressure.plot(title="{} Pressure Plot (HAR)".format(flight_id),ylabel="Pressure in hPa",xlabel="Time at 5 sec intervals",figsize=(20, 10));
-plt.savefig('Plots/har_pressure_plot.pdf',bbox_inches = "tight",dpi = 500)
+plt.savefig('Plots/'+ flight_id + '-har_pressure_plot.pdf',bbox_inches = "tight",dpi = 500)
 
 bert_df.Pressure.plot(title="{} Pressure Plot (BERT)".format(flight_id),ylabel="Pressure in hPa",figsize=(20, 10));
-plt.savefig('Plots/bert_pressure_plot.pdf',bbox_inches = "tight",dpi = 500)
+plt.savefig('Plots/'+ flight_id + '-bert_pressure_plot.pdf',bbox_inches = "tight",dpi = 500)
 
 har_df.plot(title="{} Temp vs Altitude Plot".format(flight_id),ylabel="Altitude in meters",xlabel="Temp in C",x="Temp",y="Altitude",figsize=(20, 10))
-plt.savefig('Plots/tempalt_plot.pdf',bbox_inches = "tight",dpi = 500)
+plt.savefig('Plots/'+ flight_id + '-tempalt_plot.pdf',bbox_inches = "tight",dpi = 500)
 
 har_df.plot(title="{} Pressure vs Altitude Plot".format(flight_id),ylabel="Altitude in meters",xlabel="Pressure in hPa",x="Pressure",y="Altitude",figsize=(20, 10))
-plt.savefig('Plots/pressurealt_plot.pdf',bbox_inches = "tight",dpi = 500)
+plt.savefig('Plots/'+ flight_id + '-pressurealt_plot.pdf',bbox_inches = "tight",dpi = 500)
 
 # Setup fixed points for graphing with
 
@@ -281,7 +283,7 @@ ax2.tick_params(axis='y', labelcolor=color)
 # Always have a good title
 plt.title("{} Temp vs Humidity".format(flight_id),color='c')
 # This allows us to save our pretty graph so we can frame it later
-plt.savefig('Plots/temp_humidity.pdf',bbox_inches = "tight",dpi = 500)
+plt.savefig('Plots/'+ flight_id + '-temp_humidity.pdf',bbox_inches = "tight",dpi = 500)
 
 # Setup fixed points for graphing with
 
@@ -303,7 +305,7 @@ ax2.tick_params(axis='y', labelcolor=color)
 # Always have a good title
 plt.title("{} Temp vs Pressure".format(flight_id),color='c')
 # This allows us to save our pretty graph so we can frame it later
-plt.savefig('Plots/temp_pressure.pdf',bbox_inches = "tight",dpi = 500)
+plt.savefig('Plots/'+ flight_id + '-temp_pressure.pdf',bbox_inches = "tight",dpi = 500)
 
 # Setup fixed points for graphing with
 
@@ -325,7 +327,7 @@ ax2.tick_params(axis='y', labelcolor=color)
 # Always have a good title
 plt.title("{} Humidity vs Pressure".format(flight_id),color='c')
 # This allows us to save our pretty graph so we can frame it later
-plt.savefig('Plots/humidity_pressure.pdf',bbox_inches = "tight",dpi = 500)
+plt.savefig('Plots/'+ flight_id + '-humidity_pressure.pdf',bbox_inches = "tight",dpi = 500)
 
 
 tilemapbase.init(create=True)
@@ -358,13 +360,14 @@ plt.xlabel('Longitude (DD.MM)', color=color)
 
 plt.title("{} HAR GPS Plot".format(flight_id),color='r')
 plt.plot(bert_lon,bert_lat)
-plt.savefig('Plots/gps_plot_nomap.pdf',bbox_inches = "tight",dpi = 500)
+plt.savefig('Plots/'+ flight_id + '-gps_plot_nomap.pdf',bbox_inches = "tight",dpi = 500)
 
 
 ur = (42.133700, -93.494635)
 ll = (42.042358, -93.692460)
 fig = plt.figure(figsize=(15, 15))
-ax = Axes3D(fig)
+#ax = Axes3D(fig)
+ax = fig.add_subplot(111, projection='3d')
 ax.plot3D(har_lon,har_lat,har_alt)
 
 ax.set_title(u'{} 3D plot of flight Path'.format(flight_id))
@@ -372,7 +375,7 @@ ax.set_xlabel(u'Longitude (°E)', labelpad=10)
 ax.set_ylabel(u'Latitude (°N)', labelpad=10)
 ax.set_zlabel(u'Altitude (meters)', labelpad=20)
 ax.plot3D(har_lon, har_lat, har_alt, color = 'green', lw = 1.5)
-plt.savefig('Plots/3D_Map_View.pdf',bbox_inches = "tight",dpi = 300)
+plt.savefig('Plots/'+ flight_id + '-3D_Map_View.pdf',bbox_inches = "tight",dpi = 300)
 
 # Define the `extent`
 color='blue'
@@ -399,7 +402,7 @@ plt.xlabel('Longitude (Mercator)', color=color)
 plt.title("{} GPS Plot on Street map".format(flight_id),color='r')
 
 ax.plot(x, y,"b-")
-plt.savefig('Plots/gps_plot_map.pdf',bbox_inches = "tight",dpi = 300)
+plt.savefig('Plots/'+ flight_id + '-gps_plot_map.pdf',bbox_inches = "tight",dpi = 300)
 
 # Define the `extent`
 color='blue'
@@ -426,7 +429,7 @@ plt.xlabel('Longitude (Mercator)', color=color)
 plt.title("{} GPS Plot Landing".format(flight_id),color='r')
 
 ax.plot(x, y,"b-")
-plt.savefig('Plots/gps_plot_map_landing.pdf',bbox_inches = "tight",dpi = 300)
+plt.savefig('Plots/'+ flight_id + '-gps_plot_map_landing.pdf',bbox_inches = "tight",dpi = 300)
 
 
 # Convert the Pandas dataframes to NumPy arrays
@@ -438,7 +441,7 @@ mag = np.array([bert_df.MagX.to_numpy,bert_df.MagY.to_numpy,bert_df.MagZ.to_nump
 gxi,gyi,gzi = process_and_plot_gyro(bert_df)
     
 pitch,roll=process_pitch_roll(bert_df)
-plot_gyro_vs_acc( rad2deg(gxi),rad2deg(pitch))
+plot_gyro_vs_acc(rad2deg(gxi),rad2deg(pitch))
 
 
 corr_x,corr_y,corr_z = calculate_mag_correction(bert_df)
@@ -450,6 +453,6 @@ t = np.arange(mx.shape[0])
 fig = plt.figure(figsize=(20, 14))
 plt.plot(t,mx,t,my,t,mz)
 plt.grid(which='Both')
-    
+plt.savefig('Plots/'+ flight_id + '-IMU_mag.pdf',bbox_inches = "tight",dpi = 300)
 process_and_plot_yaw(bert_df)
 
